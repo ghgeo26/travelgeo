@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>2026 금호고 여행지리 수행평가</title>
+<!-- 화면 캡처를 위한 html2canvas 외부 라이브러리 로드 -->
+
+<style>
+  body {
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+    background-color: #f3f4f6;
+    padding: 20px;
+    margin: 0;
+  }
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  h1 { 
+    text-align: center; 
+    font-size: 26px; 
+    margin-bottom: 30px;
+    color: #111827;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 25px;
+    table-layout: fixed;
+  }
+  th, td {
+    border: 1px solid #d1d5db;
+    padding: 12px;
+    text-align: left;
+    vertical-align: middle;
+    word-wrap: break-word;
+  }
+  th { 
+    background-color: #f9fafb; 
+    font-weight: bold; 
+    text-align: center;
+    width: 20%;
+  }
+  .text-center { text-align: center; }
+  input[type="text"], textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+  }
+  /* 텍스트에어리어 자동 늘어나도록 기본 설정 (스크롤 숨김) */
+  textarea { 
+    resize: none; 
+    overflow: hidden; 
+    min-height: 100px; 
+  }
+  .char-count {
+    font-size: 13px;
+    color: #4b5563;
+    text-align: right;
+    margin-top: 6px;
+  }
+  .status-btn {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-top: 8px;
+    background-color: #e5e7eb;
+    color: #6b7280;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+    transition: 0.3s;
+  }
+  /* 글자 수를 만족했을 때 녹색 버튼 활성화 */
+  .status-btn.active {
+    background-color: #10b981; 
+    color: white;
+  }
+  .status-btn.over {
+    background-color: #ef4444;
+    color: white;
+  }
+  .radio-group label {
+    margin-right: 15px;
+    cursor: pointer;
+  }
+  
+  
+
+  /* 이미지 복붙 영역 스타일 */
+  .image-paste-area {
+    width: 100%;
+    min-height: 150px;
+    border: 2px dashed #d1d5db;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    text-align: center;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    background-color: #f9fafb;
+    outline: none;
+  }
+  .image-paste-area img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  /* 캡처할 때 textarea를 대체할 숨겨진 div (텍스트 잘림 방지용) */
+  .print-text {
+    display: none;
+    white-space: pre-wrap;
+    word-break: break-all;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+    min-height: 100px;
+    font-family: inherit;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .action-btn {
+    flex: 1;
+    padding: 15px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s;
+  }
+  .reset-btn {
+    background-color: #ef4444;
+  }
+  .reset-btn:hover {
+    background-color: #dc2626;
+  }
+  .download-btn {
+    background-color: #2563eb;
+  }
+  .download-btn:hover {
+    background-color: #1d4ed8;
+  }
+</style>
+</head>
+<body>
+<div class="container" id="capture-area">
+<h1>2026 금호고 여행지리 수행평가<br/>버킷리스트 여행지</h1>
+<table>
+<tr>
+<th>수업교실</th>
+<td colspan="3">
+<div class="radio-group">
+<label><input name="classRoom" type="radio" value="2학년1반"/> 2학년 1반</label>
+<label><input name="classRoom" type="radio" value="2학년3반"/> 2학년 3반</label>
+<label><input name="classRoom" type="radio" value="2학년4반"/> 2학년 4반</label>
+</div>
+</td>
+</tr>
+<tr>
+<th>학번</th>
+<td><input id="studentId" placeholder="예: 20101" type="text"/><div class="print-text input-print-text" style="display:none; padding:10px; border:1px solid #d1d5db; border-radius:4px; font-size:14px; min-height:40px; box-sizing:border-box; word-break:break-all;"></div>
+<div class="print-text input-print-text" style="display:none; padding:10px; border:1px solid #d1d5db; border-radius:4px; font-size:14px; min-height:40px; box-sizing:border-box; word-break:break-all;"></div></td>
+<th>이름</th>
+<td><input id="studentName" placeholder="홍길동" type="text"/><div class="print-text input-print-text" style="display:none; padding:10px; border:1px solid #d1d5db; border-radius:4px; font-size:14px; min-height:40px; box-sizing:border-box; word-break:break-all;"></div>
+<div class="print-text input-print-text" style="display:none; padding:10px; border:1px solid #d1d5db; border-radius:4px; font-size:14px; min-height:40px; box-sizing:border-box; word-break:break-all;"></div></td>
+</tr>
+</table>
+<table>
+<tr>
+<th>세 번째 여행지<br/>(국가명, 지역명)</th>
+<td colspan="2"><input class="no-paste" id="destination" placeholder="직접 입력하세요" type="text"/><div class="print-text input-print-text" style="display:none; padding:10px; border:1px solid #d1d5db; border-radius:4px; font-size:14px; min-height:40px; box-sizing:border-box; word-break:break-all;"></div>
+<div class="print-text input-print-text" style="display:none; padding:10px; border:1px solid #d1d5db; border-radius:4px; font-size:14px; min-height:40px; box-sizing:border-box; word-break:break-all;"></div></td>
+</tr>
+<tr>
+<th class="text-center">사진</th>
+<td style="width:40%;">
+<div class="image-paste-area" tabindex="0">여기에 이미지를 붙여넣기\n(Ctrl+V) 또는 드래그</div>
+</td>
+<td style="width:40%;">
+<div class="image-paste-area" tabindex="0">여기에 이미지를 붙여넣기\n(Ctrl+V) 또는 드래그</div>
+</td>
+</tr>
+<tr>
+<th>선정 이유 및<br/>기대되는 점<br/>(250~300자)</th>
+<td colspan="2">
+<!-- 실제 입력창 -->
+<textarea class="no-paste auto-resize auto-resize" id="reason" placeholder="250~300자로 작성하세요"></textarea><div class="print-text" id="reason-print" style="display:none; padding:10px; border:1px solid #d1d5db; border-radius:4px; font-size:14px; min-height:100px; box-sizing:border-box; white-space:pre-wrap; word-break:break-all;"></div>
+<!-- 캡처 시 보여질 대체 div -->
+<div class="print-text" id="reason-print"></div>
+<div class="char-count"><span id="reason-count">0</span> / 250~300자</div>
+<div class="status-btn" id="reason-btn">글자수 부족</div>
+</td>
+</tr>
+<tr>
+<th>여행지 정보<br/>(500~600자)</th>
+<td colspan="2">
+<textarea class="no-paste auto-resize auto-resize" id="info" placeholder="500~600자로 작성하세요"></textarea><div class="print-text" id="info-print" style="display:none; padding:10px; border:1px solid #d1d5db; border-radius:4px; font-size:14px; min-height:100px; box-sizing:border-box; white-space:pre-wrap; word-break:break-all;"></div>
+<div class="print-text" id="info-print"></div>
+<div class="char-count"><span id="info-count">0</span> / 500~600자</div>
+<div class="status-btn" id="info-btn">글자수 부족</div>
+</td>
+</tr>
+<tr>
+<th>출처<br/>(참고 자료 링크)</th>
+<td colspan="2">
+<textarea class="auto-resize auto-resize" id="source" placeholder="링크를 붙여넣으세요"></textarea><div class="print-text" id="source-print" style="display:none; padding:10px; border:1px solid #d1d5db; border-radius:4px; font-size:14px; min-height:100px; box-sizing:border-box; white-space:pre-wrap; word-break:break-all;"></div>
+<div class="print-text" id="source-print"></div>
+</td>
+</tr>
+</table>
+</div>
+<div class="button-group"><button class="action-btn reset-btn" onclick="resetForm()">학습지 초기화</button><button class="action-btn download-btn" onclick="downloadHtml('세번째')">제출용 HTML 다운로드</button></div>
+<script>
+    // 1. 복사/붙여넣기 금지 스크립트
+    document.querySelectorAll('.no-paste').forEach(el => {
+      el.addEventListener('paste', e => {
+        e.preventDefault();
+        alert('이 항목은 복사/붙여넣기가 금지되어 있습니다. 직접 타이핑하여 작성해주세요.');
+      });
+      el.addEventListener('drop', e => e.preventDefault());
+    });
+
+    // 2. 실시간 글자 수 계산 및 녹색 버튼 활성화 스크립트
+    function updateCharCount(inputId, countId, btnId, min, max) {
+      const input = document.getElementById(inputId);
+      const count = document.getElementById(countId);
+      const btn = document.getElementById(btnId);
+
+      if(!input || !count || !btn) return;
+
+      input.addEventListener('input', () => {
+        const length = input.value.length;
+        count.textContent = length;
+
+        // Auto-resize
+        input.style.height = 'auto';
+        input.style.height = input.scrollHeight + 'px';
+
+        if (length >= min && length <= max) {
+          btn.classList.add('active');
+          btn.classList.remove('over');
+          btn.textContent = '[글자수 충족]';
+        } else if (length < min) {
+          btn.classList.remove('active');
+          btn.classList.remove('over');
+          btn.textContent = '[글자수 부족]';
+        } else {
+          btn.classList.remove('active');
+          btn.classList.add('over');
+          btn.textContent = '[글자수 초과]';
+        }
+      });
+    }
+
+    updateCharCount('reason', 'reason-count', 'reason-btn', 250, 300);
+    updateCharCount('info', 'info-count', 'info-btn', 500, 600);
+
+    // 3. 텍스트에어리어 자동 크기 조절 기능
+    document.querySelectorAll('.auto-resize').forEach(el => {
+      el.addEventListener('input', function() {
+        this.style.height = 'auto'; // 높이 초기화
+        this.style.height = (this.scrollHeight) + 'px'; // 내용물 만큼 높이 재설정
+      });
+    });
+
+    // 4. 이미지 붙여넣기(Ctrl+V) 및 드래그 앤 드롭 스크립트
+    document.querySelectorAll('.image-paste-area').forEach(area => {
+      area.addEventListener('click', () => area.focus());
+
+      // 복사/붙여넣기
+      area.addEventListener('paste', e => {
+        e.preventDefault();
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for (let index in items) {
+          const item = items[index];
+          if (item.kind === 'file') {
+            const blob = item.getAsFile();
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              area.innerHTML = `<img src="${event.target.result}" alt="pasted image">`;
+            };
+            reader.readAsDataURL(blob);
+          }
+        }
+      });
+
+      // 드래그 앤 드롭
+      area.addEventListener('dragover', e => {
+        e.preventDefault();
+        area.style.borderColor = '#2563eb';
+      });
+      area.addEventListener('dragleave', e => {
+        e.preventDefault();
+        area.style.borderColor = '#d1d5db';
+      });
+      area.addEventListener('drop', e => {
+        e.preventDefault();
+        area.style.borderColor = '#d1d5db';
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            area.innerHTML = `<img src="${event.target.result}" alt="dropped image">`;
+          };
+          reader.readAsDataURL(e.dataTransfer.files[0]);
+        }
+      });
+    });
+
+    // 5. 제출용 이미지 저장 스크립트 (텍스트 잘림 해결 트릭 포함)
+    function downloadImage() {
+      const selectedClass = document.querySelector('input[name="classRoom"]:checked');
+      const studentId = document.getElementById('studentId').value.trim();
+
+      if (!selectedClass || !studentId) {
+        alert('수업교실을 선택하고 학번을 입력해야 이미지를 생성할 수 있습니다.');
+        return;
+      }
+
+      // 세번째은 파이썬 스크립트가 첫번째, 두번째, 세번째로 치환함
+      const className = selectedClass.value;
+      const today = new Date();
+      const dateStr = today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
+      const filename = `${className}_${studentId}_세번째_${dateStr}.png`;
+
+
+      // 캡처 전에 input[type="text"]와 textarea 내용을 div에 복사하고 숨김
+      document.querySelectorAll('input[type="text"]').forEach(inputEl => {
+        const printDiv = inputEl.nextElementSibling;
+        if (printDiv && printDiv.classList.contains('input-print-text')) {
+          printDiv.textContent = inputEl.value;
+          inputEl.style.display = 'none';
+          printDiv.style.display = 'block';
+        }
+      });
+
+      document.querySelectorAll('.auto-resize').forEach(textarea => {
+
+        const printDiv = textarea.nextElementSibling;
+        if (printDiv && printDiv.classList.contains('print-text')) {
+          if (textarea.id === 'source') {
+            printDiv.innerHTML = linkify(textarea.value).replace(/\n/g, '<br>');
+          } else {
+            printDiv.innerHTML = textarea.value.replace(/\n/g, '<br>');
+          }
+          textarea.style.display = 'none';       // 입력창 숨김
+          printDiv.style.display = 'block';      // 일반 텍스트 박스 표시
+        }
+      });
+
+      // 캡처 진행
+      window.scrollTo(0,0);
+      html2canvas(document.getElementById("capture-area"), { scale: 2, backgroundColor: '#ffffff', scrollY: 0 }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+
+
+        // 캡처가 끝나면 원래대로 롤백
+        document.querySelectorAll('input[type="text"]').forEach(inputEl => {
+          const printDiv = inputEl.nextElementSibling;
+          if (printDiv && printDiv.classList.contains('input-print-text')) {
+            inputEl.style.display = 'block';
+            printDiv.style.display = 'none';
+          }
+        });
+
+        document.querySelectorAll('.auto-resize').forEach(textarea => {
+
+          const printDiv = textarea.nextElementSibling;
+          if (printDiv && printDiv.classList.contains('print-text')) {
+            textarea.style.display = 'block';    // 입력창 다시 표시
+            printDiv.style.display = 'none';     // 텍스트 박스 숨김
+          }
+        });
+      });
+    }
+  </script>
+<script>
+    // 1. 복사/붙여넣기 금지 스크립트 (출처 제외)
+    document.querySelectorAll('.no-paste').forEach(el => {
+      el.addEventListener('paste', e => {
+        e.preventDefault();
+        alert('이 항목은 복사/붙여넣기가 금지되어 있습니다. 직접 타이핑하여 작성해주세요.');
+      });
+      el.addEventListener('drop', e => e.preventDefault());
+    });
+
+    // 2. 글자 수 계산 및 버튼 활성화
+    function updateCharCount(inputId, countId, btnId, min, max) {
+      const input = document.getElementById(inputId);
+      const count = document.getElementById(countId);
+      const btn = document.getElementById(btnId);
+
+      if(!input || !count || !btn) return;
+
+      input.addEventListener('input', () => {
+        const length = input.value.length;
+        count.textContent = length;
+
+        // Auto-resize
+        input.style.height = 'auto';
+        input.style.height = input.scrollHeight + 'px';
+
+        if (length >= min && length <= max) {
+          btn.classList.add('active');
+          btn.classList.remove('over');
+          btn.textContent = '[글자수 충족]';
+        } else if (length < min) {
+          btn.classList.remove('active');
+          btn.classList.remove('over');
+          btn.textContent = '[글자수 부족]';
+        } else {
+          btn.classList.remove('active');
+          btn.classList.add('over');
+          btn.textContent = '[글자수 초과]';
+        }
+      });
+    }
+
+    updateCharCount('reason', 'reason-count', 'reason-btn', 250, 300);
+    updateCharCount('plan', 'plan-count', 'plan-btn', 250, 300);
+
+    // 3. 이미지 붙여넣기 및 드래그 앤 드롭
+    document.querySelectorAll('.image-paste-area').forEach(area => {
+      area.addEventListener('click', () => area.focus());
+
+      const handleImage = (file) => {
+        if (file && file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = e => {
+            area.innerHTML = `<img src="${e.target.result}" style="max-width:100%; max-height:100%; object-fit:contain;" />`;
+            saveToLocal();
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+
+      area.addEventListener('paste', e => {
+        e.preventDefault();
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for (let index in items) {
+          const item = items[index];
+          if (item.kind === 'file') {
+            handleImage(item.getAsFile());
+            break;
+          }
+        }
+      });
+
+      area.addEventListener('dragover', e => {
+        e.preventDefault();
+        area.style.backgroundColor = '#e5e7eb';
+      });
+
+      area.addEventListener('dragleave', e => {
+        e.preventDefault();
+        area.style.backgroundColor = '#f9fafb';
+      });
+
+      area.addEventListener('drop', e => {
+        e.preventDefault();
+        area.style.backgroundColor = '#f9fafb';
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+          handleImage(e.dataTransfer.files[0]);
+        }
+      });
+    });
+
+    // 4. 로컬 스토리지 임시 저장
+    const STORAGE_KEY = 'bucketlist_' + '세번째'; 
+
+    function saveToLocal() {
+      const data = {};
+      document.querySelectorAll('input[type="text"], textarea').forEach((el, index) => {
+        if(el.id) data[el.id] = el.value;
+        else data['input_' + index] = el.value;
+      });
+
+      const selectedRadio = document.querySelector('input[name="classRoom"]:checked');
+      if (selectedRadio) data['classRoom'] = selectedRadio.value;
+
+      const images = [];
+      document.querySelectorAll('.image-paste-area').forEach(area => {
+        const img = area.querySelector('img');
+        images.push(img ? img.src : null);
+      });
+      data['images'] = images;
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function loadFromLocal() {
+      const dataStr = localStorage.getItem(STORAGE_KEY);
+      if (!dataStr) return;
+      try {
+        const data = JSON.parse(dataStr);
+        document.querySelectorAll('input[type="text"], textarea').forEach((el, index) => {
+          const val = el.id ? data[el.id] : data['input_' + index];
+          if(val !== undefined) el.value = val;
+          if(el.tagName === 'TEXTAREA') {
+            el.dispatchEvent(new Event('input'));
+          }
+        });
+        if (data['classRoom']) {
+          const radio = document.querySelector(`input[name="classRoom"][value="${data['classRoom']}"]`);
+          if (radio) radio.checked = true;
+        }
+        if (data['images']) {
+          document.querySelectorAll('.image-paste-area').forEach((area, i) => {
+            if (data['images'][i]) {
+              area.innerHTML = `<img src="${data['images'][i]}" style="max-width:100%; max-height:100%; object-fit:contain;" />`;
+            }
+          });
+        }
+      } catch(e) {}
+    }
+
+    document.querySelectorAll('input, textarea').forEach(el => {
+      el.addEventListener('input', saveToLocal);
+      el.addEventListener('change', saveToLocal);
+    });
+
+    window.addEventListener('DOMContentLoaded', loadFromLocal);
+
+    // 5. 초기화 기능
+    function resetForm() {
+      if (confirm('정말로 학습지를 초기화하시겠습니까? 모든 내용이 삭제됩니다.')) {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+      }
+    }
+
+    // URL to Link conversion
+    function linkify(text) {
+      const urlRegex = /(https?:\/\/[^\s<]+)/g;
+      return text.replace(urlRegex, function(url) {
+        return '<a href="' + url + '" target="_blank" style="color:#2563eb; text-decoration:underline;">' + url + '</a>';
+      });
+    }
+
+    // 6. HTML 다운로드 기능
+    function downloadHtml(nth) {
+      const radio = document.querySelector('input[name="classRoom"]:checked');
+      const className = radio ? radio.value.replace(/\s/g, '') : '교실미상';
+      const studentId = document.getElementById('studentId') ? document.getElementById('studentId').value.trim() : '';
+      const finalStudentId = studentId || '학번미상';
+
+      const today = new Date();
+      const dateStr = String(today.getFullYear()).slice(2) + 
+                      String(today.getMonth() + 1).padStart(2, '0') + 
+                      String(today.getDate()).padStart(2, '0');
+
+      const filename = `${className}_${finalStudentId}_${nth}여행지_${dateStr}.html`;
+
+      // Change inputs to read-only views
+      document.querySelectorAll('input[type="text"]').forEach(inputEl => {
+        const printDiv = inputEl.nextElementSibling;
+        if (printDiv && printDiv.classList.contains('input-print-text')) {
+          printDiv.textContent = inputEl.value;
+          inputEl.style.display = 'none';
+          printDiv.style.display = 'block';
+        }
+        inputEl.setAttribute('value', inputEl.value);
+      });
+
+      document.querySelectorAll('.auto-resize').forEach(textarea => {
+        const printDiv = textarea.nextElementSibling;
+        if (printDiv && printDiv.classList.contains('print-text')) {
+          if (textarea.id === 'source') {
+            printDiv.innerHTML = linkify(textarea.value).replace(/\n/g, '<br>');
+          } else {
+            printDiv.innerHTML = textarea.value.replace(/\n/g, '<br>');
+          }
+          textarea.style.display = 'none';
+          printDiv.style.display = 'block';
+        }
+        textarea.textContent = textarea.value; // Store text for the element
+      });
+
+      // Update radios in DOM for static HTML
+      document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        if (radio.checked) radio.setAttribute('checked', 'checked');
+        else radio.removeAttribute('checked');
+      });
+
+      const btnGroup = document.querySelector('.button-group');
+      if (btnGroup) btnGroup.style.display = 'none';
+
+      // Clone document and remove script for static downloaded version
+      const clonedDoc = document.documentElement.cloneNode(true);
+      const scripts = clonedDoc.querySelectorAll('script');
+      scripts.forEach(s => s.remove());
+
+      const htmlContent = "<!DOCTYPE html>\n<html lang=\"ko\">\n" + clonedDoc.innerHTML + "\n</html>";
+
+      // Restore view
+      if (btnGroup) btnGroup.style.display = 'flex';
+
+      document.querySelectorAll('input[type="text"]').forEach(inputEl => {
+        const printDiv = inputEl.nextElementSibling;
+        if (printDiv && printDiv.classList.contains('input-print-text')) {
+          inputEl.style.display = 'block';
+          printDiv.style.display = 'none';
+        }
+      });
+
+      document.querySelectorAll('.auto-resize').forEach(textarea => {
+        const printDiv = textarea.nextElementSibling;
+        if (printDiv && printDiv.classList.contains('print-text')) {
+          textarea.style.display = 'block';
+          printDiv.style.display = 'none';
+        }
+      });
+
+      const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+    </script></body>
+</html>
